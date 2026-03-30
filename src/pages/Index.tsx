@@ -399,7 +399,7 @@ export default function Index() {
             transition={{ delay: 0.3 }}
             className="w-full max-w-xs space-y-4"
           >
-            <SignInButton className="w-full" size="lg" />
+            <SignInButton />
             <div className="grid grid-cols-3 gap-2 text-center">
               {[["Profile", "Personal details"], ["Contacts", "Emergency SMS"], ["Device", "Hardware link"]].map(([title, sub]) => (
                 <div key={title} className="bg-muted rounded-xl p-2.5">
