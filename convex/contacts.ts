@@ -7,10 +7,13 @@ export const list = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return [];
+    
+    // FIX: Changed identity.tokenIdentifier to identity.subject
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
+      .withIndex("by_token", (q) => q.eq("tokenIdentifier", identity.subject))
       .unique();
+      
     if (!user) return [];
     return await ctx.db
       .query("contacts")
@@ -30,10 +33,13 @@ export const add = mutation({
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError({ message: "Not authenticated", code: "UNAUTHENTICATED" });
+    
+    // FIX: Changed identity.tokenIdentifier to identity.subject
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
+      .withIndex("by_token", (q) => q.eq("tokenIdentifier", identity.subject))
       .unique();
+      
     if (!user) throw new ConvexError({ message: "User not found", code: "NOT_FOUND" });
 
     // Check max 5 contacts
@@ -60,10 +66,13 @@ export const remove = mutation({
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError({ message: "Not authenticated", code: "UNAUTHENTICATED" });
+    
+    // FIX: Changed identity.tokenIdentifier to identity.subject
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
+      .withIndex("by_token", (q) => q.eq("tokenIdentifier", identity.subject))
       .unique();
+      
     if (!user) throw new ConvexError({ message: "User not found", code: "NOT_FOUND" });
 
     const contact = await ctx.db.get(args.contactId);
@@ -85,10 +94,13 @@ export const update = mutation({
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new ConvexError({ message: "Not authenticated", code: "UNAUTHENTICATED" });
+    
+    // FIX: Changed identity.tokenIdentifier to identity.subject
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
+      .withIndex("by_token", (q) => q.eq("tokenIdentifier", identity.subject))
       .unique();
+      
     if (!user) throw new ConvexError({ message: "User not found", code: "NOT_FOUND" });
 
     const contact = await ctx.db.get(args.contactId);
